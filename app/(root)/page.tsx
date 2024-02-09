@@ -1,12 +1,27 @@
+// 'use client'
+
+import Collection from '@/components/shared/Collection'
 import { Button } from '@/components/ui/button'
+import { getAllEvents, uploadEvents } from '@/lib/actions/event.actions'
 import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
 
-const Home = () => {
+const Home = async () => {
+
+    const events = await getAllEvents({
+        query: '',
+        category: '',
+        page: 1,
+        limit: 6
+    })
+
+    // console.log((events?.data))
+
     return (
         <>
             <section className='bg-primary-50 bg-dotted-pattern bg-contain py-5 md:py-10'>
+
                 <div className='wrapper grid grid-cols-1 md:grid-cols-2 gap-5 2xl:gap-0'>
                     <div className='flex flex-col justify-center gap-8'>
                         <h1 className="h1-bold">Host, Connect, Celebrate: Your Events, Our Platform!</h1>
@@ -35,6 +50,16 @@ const Home = () => {
                     Search
                     CategoryFilter
                 </div>
+
+                <Collection
+                    data={events?.data || []}
+                    emptyTitle="No Events Found"
+                    emptyStateSubtext="Come back later"
+                    collectionType="All_Events"
+                    limit={6}
+                    page={1}
+                    totalPages={events?.totalPages}
+                />
             </section>
         </>
     )
